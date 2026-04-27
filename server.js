@@ -27,7 +27,11 @@ app.use(helmet());
 // CORS (allow frontend)
 app.use(
   cors({
-    origin: process.env.CLIENT_URL || "*",
+    origin: [
+      "http://localhost:3000",
+      "https://zentrova-frontend.vercel.app",
+    ],
+    methods: ["GET", "POST", "PUT", "DELETE"],
     credentials: true,
   })
 );
