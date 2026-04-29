@@ -17,7 +17,8 @@ exports.createLead = async (req, res) => {
       labourValue: Number(req.body.labourValue) || 0,
 
       followUpDate: req.body.followUpDate,
-
+      
+      userId: req.user.id,
       notes: req.body.note
         ? [{ text: req.body.note }]
         : [],
@@ -37,7 +38,9 @@ exports.getLeads = async (req, res) => {
   try {
     const { status, search } = req.query;
 
-    let query = {};
+    let query = {
+      userId: req.user.id,
+    };
 
     if (status) query.status = status;
 
@@ -61,7 +64,10 @@ exports.getLeads = async (req, res) => {
 // ✅ GET SINGLE LEAD
 exports.getLeadById = async (req, res) => {
   try {
-    const lead = await Lead.findById(req.params.id);
+    const lead = await Lead.findOne({
+      _id: req.params.id,
+      userId: req.user.id, // ✅ security
+    });
 
     if (!lead) {
       return res.status(404).json({ message: "Lead not found" });
@@ -115,12 +121,15 @@ exports.updateLead = async (req, res) => {
       updateData.$push = pushData;
     }
 
-    const updatedLead = await Lead.findByIdAndUpdate(
-      req.params.id,
+    const updatedLead = await Lead.findOneAndUpdate(
+      {
+        _id: req.params.id,
+        userId: req.user.id, // 🔥 MUST
+      },
       updateData,
       { new: true }
     );
-
+    
     res.json({
       success: true,
       data: updatedLead,
@@ -135,7 +144,10 @@ exports.updateLead = async (req, res) => {
 // ✅ DELETE LEAD
 exports.deleteLead = async (req, res) => {
   try {
-    const lead = await Lead.findById(req.params.id);
+    const lead = await Lead.findOne({
+      _id: req.params.id,
+      userId: req.user.id, // ✅ security
+    });
 
     if (!lead) {
       return res.status(404).json({ message: "Lead not found" });
@@ -153,7 +165,10 @@ exports.deleteLead = async (req, res) => {
 // ✅ ADD NOTE
 exports.addNote = async (req, res) => {
   try {
-    const lead = await Lead.findById(req.params.id);
+    const lead = await Lead.findOne({
+      _id: req.params.id,
+      userId: req.user.id, // ✅ security
+    });
 
     lead.notes.push({ text: req.body.text });
 
@@ -173,7 +188,10 @@ exports.addNote = async (req, res) => {
 // ✅ UPDATE STATUS ONLY
 exports.updateStatus = async (req, res) => {
   try {
-    const lead = await Lead.findById(req.params.id);
+    const lead = await Lead.findOne({
+      _id: req.params.id,
+      userId: req.user.id, // ✅ security
+    });
 
     lead.status = req.body.status;
 

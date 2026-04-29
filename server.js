@@ -9,7 +9,7 @@ const connectDB = require("./config/db");
 
 // Routes
 const leadRoutes = require("./routes/leadRoutes");
-
+const authRoutes = require("./routes/authRoutes");
 const app = express();
 
 /* =========================
@@ -53,6 +53,7 @@ app.get("/", (req, res) => {
 });
 
 app.use("/api/leads", leadRoutes);
+app.use("/api/auth", authRoutes);
 
 /* =========================
    ERROR HANDLING

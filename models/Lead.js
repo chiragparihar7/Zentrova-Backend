@@ -7,7 +7,12 @@ const leadSchema = new mongoose.Schema(
       required: true,
       trim: true,
     },
-
+    // 🔥 IMPORTANT: user link
+    userId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      required: true,
+    },
     phone: {
       type: String,
       required: true,
@@ -40,12 +45,12 @@ const leadSchema = new mongoose.Schema(
       type: Number,
       default: 0,
     },
- 
+
     labourValue: {
       type: Number,
       default: 0,
     },
-    
+
     followUpDate: {
       type: Date,
     },
