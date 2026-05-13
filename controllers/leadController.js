@@ -1,7 +1,6 @@
-const Lead = require("../models/Lead");
+import Lead from "../models/Lead.js";
 
-
-exports.createLead = async (req, res) => {
+export const createLead = async (req, res) => {
   try {
     const lead = await Lead.create({
       name: req.body.name,
@@ -34,7 +33,7 @@ exports.createLead = async (req, res) => {
 };
 
 // ✅ GET ALL LEADS (with filters)
-exports.getLeads = async (req, res) => {
+export const getLeads = async (req, res) => {
   try {
     const { status, search } = req.query;
 
@@ -62,7 +61,7 @@ exports.getLeads = async (req, res) => {
 
 
 // ✅ GET SINGLE LEAD
-exports.getLeadById = async (req, res) => {
+export const getLeadById = async (req, res) => {
   try {
     const lead = await Lead.findOne({
       _id: req.params.id,
@@ -81,7 +80,7 @@ exports.getLeadById = async (req, res) => {
 
 
 // ✅ UPDATE LEAD
-exports.updateLead = async (req, res) => {
+export const updateLead = async (req, res) => {
   try {
 
     const { timeline, notes, ...rest } = req.body;
@@ -142,7 +141,7 @@ exports.updateLead = async (req, res) => {
 
 
 // ✅ DELETE LEAD
-exports.deleteLead = async (req, res) => {
+export const deleteLead = async (req, res) => {
   try {
     const lead = await Lead.findOne({
       _id: req.params.id,
@@ -163,7 +162,7 @@ exports.deleteLead = async (req, res) => {
 
 
 // ✅ ADD NOTE
-exports.addNote = async (req, res) => {
+export const addNote = async (req, res) => {
   try {
     const lead = await Lead.findOne({
       _id: req.params.id,
@@ -186,7 +185,7 @@ exports.addNote = async (req, res) => {
 
 
 // ✅ UPDATE STATUS ONLY
-exports.updateStatus = async (req, res) => {
+export const updateStatus = async (req, res) => {
   try {
     const lead = await Lead.findOne({
       _id: req.params.id,

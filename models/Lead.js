@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+import mongoose from "mongoose";
 
 const leadSchema = new mongoose.Schema(
   {
@@ -7,12 +7,14 @@ const leadSchema = new mongoose.Schema(
       required: true,
       trim: true,
     },
+
     // 🔥 IMPORTANT: user link
     userId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
       required: true,
     },
+
     phone: {
       type: String,
       required: true,
@@ -22,7 +24,7 @@ const leadSchema = new mongoose.Schema(
       type: String,
     },
 
-    // ✅ Address as paragraph (as you wanted)
+    // ✅ Address as paragraph
     address: {
       type: String,
     },
@@ -34,7 +36,7 @@ const leadSchema = new mongoose.Schema(
     },
 
     source: {
-      type: String, // facebook, website, referral
+      type: String,
     },
 
     assignedTo: {
@@ -80,4 +82,6 @@ const leadSchema = new mongoose.Schema(
   }
 );
 
-module.exports = mongoose.model("Lead", leadSchema);
+const Lead = mongoose.model("Lead", leadSchema);
+
+export default Lead;

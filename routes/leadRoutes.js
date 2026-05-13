@@ -1,9 +1,7 @@
-const express = require("express");
-const router = express.Router();
+import express from "express";
+import auth from "../middleware/auth.js";
 
-const auth = require("../middleware/auth"); // ✅ ADD THIS
-
-const {
+import {
   createLead,
   getLeads,
   getLeadById,
@@ -11,7 +9,9 @@ const {
   deleteLead,
   addNote,
   updateStatus,
-} = require("../controllers/leadController");
+} from "../controllers/leadController.js";
+
+const router = express.Router();
 
 // ✅ PROTECT ALL ROUTES
 router.post("/", auth, createLead);
@@ -23,4 +23,4 @@ router.delete("/:id", auth, deleteLead);
 router.post("/:id/note", auth, addNote);
 router.patch("/:id/status", auth, updateStatus);
 
-module.exports = router;
+export default router;

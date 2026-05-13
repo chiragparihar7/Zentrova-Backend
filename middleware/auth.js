@@ -1,20 +1,30 @@
-// middleware/auth.js
-const jwt = require("jsonwebtoken");
+import jwt from "jsonwebtoken";
 
-module.exports = (req, res, next) => {
+const auth = (req, res, next) => {
   const authHeader = req.headers.authorization;
 
   if (!authHeader) {
-    return res.status(401).json({ msg: "No token, access denied" });
+    return res.status(401).json({
+      msg: "No token, access denied",
+    });
   }
 
   try {
-    const token = authHeader.split(" ")[1]; // Bearer token
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const token = authHeader.split(" ")[1];
 
-    req.user = decoded; // { id }
+    const decoded = jwt.verify(
+      token,
+      process.env.JWT_SECRET
+    );
+
+    req.user = decoded;
+
     next();
   } catch (err) {
-    res.status(401).json({ msg: "Invalid token" });
+    res.status(401).json({
+      msg: "Invalid token",
+    });
   }
 };
+
+export default auth;

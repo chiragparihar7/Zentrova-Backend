@@ -1,47 +1,68 @@
-require("dotenv").config();
+import dotenv from "dotenv";
+dotenv.config();
 
-const express = require("express");
-const cors = require("cors");
-const morgan = require("morgan");
-const helmet = require("helmet");
+import express from "express";
+import cors from "cors";
+import morgan from "morgan";
+import helmet from "helmet";
 
-const connectDB = require("./config/db");
+import connectDB from "./config/db.js";
 
-// Routes
-const leadRoutes = require("./routes/leadRoutes");
-const authRoutes = require("./routes/authRoutes");
+// ROUTES
+import leadRoutes from "./routes/leadRoutes.js";
+import authRoutes from "./routes/authRoutes.js";
+import projectRoutes from "./routes/project.routes.js";
+
+// APPOINTMENT ROUTES
+import appointmentRoutes from "./routes/appointmentRoutes.js";
+
+// NOTIFICATION ROUTES
+import notificationRoutes from "./routes/notificationRoutes.js";
+
+// CRON JOBS
+import "./jobs/cronJobs.js";
+
 const app = express();
 
 /* =========================
    DATABASE CONNECTION
 ========================= */
+
 connectDB();
 
 /* =========================
    MIDDLEWARES
 ========================= */
 
-// Security headers
+// SECURITY HEADERS
 app.use(helmet());
 
-// CORS (allow frontend)
+// CORS
 app.use(
   cors({
     origin: [
       "http://localhost:3000",
       "https://zentrova-frontend.vercel.app",
     ],
-    methods: ["GET", "POST", "PUT", "DELETE"],
+
+    methods: [
+      "GET",
+      "POST",
+      "PUT",
+      "PATCH",
+      "DELETE",
+    ],
+
     credentials: true,
   })
 );
 
-// Logging (dev only)
+// LOGGING
 if (process.env.NODE_ENV === "development") {
   app.use(morgan("dev"));
 }
 
-// Body parser
+// BODY PARSER
 app.use(express.json());
 
 /* =========================
@@ -52,14 +73,32 @@ app.get("/", (req, res) => {
   res.send("Zentrova API Running 🚀");
 });
 
-app.use("/api/leads", leadRoutes);
+// AUTH
 app.use("/api/auth", authRoutes);
+
+// LEADS
+app.use("/api/leads", leadRoutes);
+
+// PROJECTS
+app.use("/api/projects", projectRoutes);
+
+// APPOINTMENTS
+app.use(
+  "/api/appointments",
+  appointmentRoutes
+);
+
+// NOTIFICATIONS
+app.use(
+  "/api/notifications",
+  notificationRoutes
+);
 
 /* =========================
    ERROR HANDLING
 ========================= */
 
-// 404 handler
+// 404 HANDLER
 app.use((req, res, next) => {
   res.status(404).json({
     success: false,
@@ -67,7 +106,7 @@ app.use((req, res, next) => {
   });
 });
 
-// Global error handler
+// GLOBAL ERROR HANDLER
 app.use((err, req, res, next) => {
   console.error(err.stack);
 
@@ -84,5 +123,7 @@ app.use((err, req, res, next) => {
 const PORT = process.env.PORT || 5000;
 
 app.listen(PORT, () => {
-  console.log(`🚀 Server running on port ${PORT}`);
+  console.log(
+    `🚀 Server running on port ${PORT}`
+  );
 });
